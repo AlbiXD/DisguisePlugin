@@ -18,18 +18,15 @@ import net.skinsrestorer.api.PlayerWrapper;
 import net.skinsrestorer.api.SkinsRestorerAPI;
 import net.skinsrestorer.api.exception.SkinRequestException;
 
-public class playerKill implements Listener {
-	Random random = new Random();
-	DisguisePlugin plugin;
-	SkinsRestorerAPI api = SkinsRestorerAPI.getApi();
-	ConfigManager config;
-	FileConfiguration fileConfig;
+public class PlayerKill implements Listener {
+	private Random random = new Random();
+	private SkinsRestorerAPI api = SkinsRestorerAPI.getApi();
+	private ConfigManager config;
+	private FileConfiguration fileConfig;
 
-	public playerKill(DisguisePlugin plugin) {
-		this.plugin = plugin;
+	public PlayerKill(DisguisePlugin plugin) {
 		this.config = plugin.config;
 		this.fileConfig = config.getConfig();
-
 	}
 
 	@EventHandler
@@ -37,13 +34,12 @@ public class playerKill implements Listener {
 		e.getEntity().setGlowing(false);
 
 		// Unmask on Death
-		if (fileConfig.contains("users." + e.getEntity().getName())) {
+		if (DisguisePlugin.playerData.containsKey(e.getEntity().getName())) {
 			try {
 				TagAPI.removeTag(e.getEntity());
 				api.removeSkin(e.getEntity().getName());
 				api.applySkin(new PlayerWrapper(e.getEntity()));
-				fileConfig.set("users." + e.getEntity().getName(), null);
-				config.saveConfig();
+				DisguisePlugin.playerData.remove(e.getEntity().getName());
 
 			} catch (SkinRequestException e1) {
 				// TODO Auto-generated catch block

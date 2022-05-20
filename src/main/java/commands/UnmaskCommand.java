@@ -1,15 +1,11 @@
 package commands;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-
 import com.lkeehl.tagapi.TagAPI;
-
-import data.ConfigManager;
 import main.DisguisePlugin;
 import net.md_5.bungee.api.ChatColor;
 import net.skinsrestorer.api.PlayerWrapper;
@@ -18,51 +14,76 @@ import net.skinsrestorer.api.exception.SkinRequestException;
 
 public class UnmaskCommand implements CommandExecutor {
 
-	DisguisePlugin plugin;
-	SkinsRestorerAPI api = SkinsRestorerAPI.getApi();
-	ConfigManager config;
-	FileConfiguration fileConfig;
+	private SkinsRestorerAPI api = SkinsRestorerAPI.getApi();
 
-	public UnmaskCommand(DisguisePlugin plugin) {
-		this.plugin = plugin;
-		this.config = plugin.config;
-		this.fileConfig = config.getConfig();
 
-	}
 
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-
 		if (!(sender instanceof Player)) {
 			sender.sendMessage("You cannot use this command");
 			return true;
 
 		}
 
-		Player player = (Player) sender;
-		ItemStack skull = plugin.inventory.getSkull();
+		/*
+		 * Self Disguise command this is meant to be a command for players to undisguise
+		 */
+		if (args.length == 0) {
+			Player player = (Player) sender;
 
-		// Check if they have a mask
+			// Check if they have a mask
 
-		if (!fileConfig.contains("users." + player.getName())) {
-			player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cYou are not disguised"));
+			if (!DisguisePlugin.playerData.containsKey(sender.getName())) {
+				player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cYou are not disguised"));
+				return true;
+			}
+
+			// Remove the mask
+			try {
+				api.removeSkin(player.getName());
+				api.applySkin(new PlayerWrapper(player));
+				TagAPI.removeTag(player);
+				DisguisePlugin.playerData.remove(sender.getName());
+
+
+			} catch (SkinRequestException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aYou have unmasked yourself!"));
+
 			return true;
 		}
 
-		// Remove the mask
-		try {
-			api.removeSkin(player.getName());
-			api.applySkin(new PlayerWrapper(player));
-			fileConfig.set("users." + player.getName(), null);
-			config.saveConfig();
-			TagAPI.removeTag(player);
+		/*
+		 * This is meant to be used by admins to undsiguise certain players for
+		 * debugging reasons
+		 */
+		if (args.length == 1 && sender.hasPermission("unmask.others")) {
+			if (!DisguisePlugin.playerData.containsKey(sender.getName())) {
+				sender.sendMessage(
+						ChatColor.translateAlternateColorCodes('&', "&c" + args[0] + " is currently not masked!"));
 
-		} catch (SkinRequestException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+				return true;
+			}
+
+			try {
+				api.removeSkin(args[0]);
+				api.applySkin(new PlayerWrapper(Bukkit.getPlayer(args[0])));
+				DisguisePlugin.playerData.remove(sender.getName());
+			} catch (SkinRequestException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&a" + args[0] + " successfully unmasked!"));
+			Bukkit.getPlayer(args[0])
+					.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cYou have been unmasked!"));
+
 		}
-		player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aYou have unmasked yourself!"));
 
 		return true;
+
 	}
 
 }

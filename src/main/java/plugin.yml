@@ -3,11 +3,10 @@ author: Albi
 description: Disguise Plugin
 name: DiguisePlugin
 version: 0.1
-depend: [ProtocolLib]
+depend: [ProtocolLib, SkinsRestorer, TagAPI]
 commands:
    disguise:
       usage: /<command>
+      permissions: disguise
    unmask:
-      usage: /<command>
-   glass:
       usage: /<command>
