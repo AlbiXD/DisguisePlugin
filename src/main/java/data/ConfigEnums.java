@@ -4,7 +4,7 @@ public enum ConfigEnums {
 	
 
 	
-	glowing_cooldown("glowing_cooldown", 5), player_skull_chance("player_skull_chance", 25);
+	glowing_cooldown("glowing_cooldown", 5), player_skull_chance("player_skull_chance", 25), item("item", "GOLD_BLOCK"), price("amount", 1);
 	
 	public final String defaults;
 	public final Object values;	

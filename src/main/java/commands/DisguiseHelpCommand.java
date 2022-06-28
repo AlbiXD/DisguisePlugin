@@ -17,49 +17,35 @@ import xyz.scyllasrock.ScyUtility.objects.SubCommand;
 
 public class DisguiseHelpCommand extends SubCommand {
 
-
 	public DisguiseHelpCommand() {
 		super("disguise", "help", new ArrayList<String>(), "disguise.help", "/disguise help", "it shows commands");
 	}
 
 	@Override
-	public boolean execute(CommandSender sender, String[] args) 
-	{	
-		sender.sendMessage(DisguisePlugin.playerData.toString());
+	public boolean execute(CommandSender sender, String[] args) {
 
 		BaseComponent[] helpCMD = new ComponentBuilder(
-				ChatColor.translateAlternateColorCodes('&', "  &a-&a&l/disguise &ahelp"))
-						.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-								new Text(ChatColor.translateAlternateColorCodes('&', "&a&lCLICK TO COPY"))))
-						.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/disguise help")).append(ChatColor
-								.translateAlternateColorCodes('&', "&7 help Lists all Disguise Help commands!"))
-						.create();
-
-		BaseComponent[] give = new ComponentBuilder(
-				ChatColor.translateAlternateColorCodes('&', "  &a-&a&l/disguise &agive <player>"))
-						.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-								new Text(ChatColor.translateAlternateColorCodes('&', "&a&lCLICK TO COPY"))))
-						.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/disguise give <player>"))
-						.append(ChatColor.translateAlternateColorCodes('&', " &7 gives a mask of the player!"))
-						.create();
-
-		BaseComponent[] unmask = new ComponentBuilder(ChatColor.translateAlternateColorCodes('&', "  &a-&a&l/unmask"))
-				.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+				ChatColor.translateAlternateColorCodes('&', "  &a-&a&l/scydisguise &ahelp")).event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 						new Text(ChatColor.translateAlternateColorCodes('&', "&a&lCLICK TO COPY"))))
-				.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/unmask"))
-				.append(ChatColor.translateAlternateColorCodes('&', " &7unmasks yourself!")).create();
+						.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/scydisguise help"))
+						.append(ChatColor.GRAY + " displays list of commands").event((ClickEvent) null).event((HoverEvent) null).create();
+		
+		BaseComponent[] giveCMD = new ComponentBuilder(
+				ChatColor.translateAlternateColorCodes('&', "  &a-&a&l/scydisguise &agive")).event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+						new Text(ChatColor.translateAlternateColorCodes('&', "&a&lCLICK TO COPY"))))
+						.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/scydisguise give"))
+						.append(ChatColor.GRAY + " ability to purchase your own skull").event((ClickEvent) null).event((HoverEvent) null).create();
 
-		BaseComponent[] unmaskPlayer = new ComponentBuilder(
-				ChatColor.translateAlternateColorCodes('&', "  &a-&a&l/disguise &ahelp"))
-						.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-								new Text(ChatColor.translateAlternateColorCodes('&', "&a&lCLICK TO COPY"))))
-						.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/unmask <player>"))
-						.append(ChatColor.translateAlternateColorCodes('&', " &7unmasks someone else!")).create();
-
+		BaseComponent[] unmaskCMD = new ComponentBuilder(
+				ChatColor.translateAlternateColorCodes('&', "  &a-&a&l/scyunmask")).event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+						new Text(ChatColor.translateAlternateColorCodes('&', "&a&lCLICK TO COPY"))))
+						.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/scyunmask"))
+						.append(ChatColor.GRAY + " removes the current disguise").event((ClickEvent) null).event((HoverEvent) null).create();
+		sender.sendMessage(ChatColor.translateAlternateColorCodes('&',"&7A list of the commands..."));
 		sender.spigot().sendMessage(helpCMD);
-		sender.spigot().sendMessage(give);
-		sender.spigot().sendMessage(unmask);
-		sender.spigot().sendMessage(unmaskPlayer);
+		sender.spigot().sendMessage(giveCMD);
+		sender.spigot().sendMessage(unmaskCMD);
+
 
 		return true;
 	}

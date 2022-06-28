@@ -5,10 +5,13 @@ import java.util.HashMap;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
+
 import commands.DisguiseCommand;
 import commands.UnmaskCommand;
 import data.ConfigEnums;
 import data.ConfigManager;
+import item.CustomItem;
+import listener.PlayerInteract;
 import listener.PlayerInventory;
 import listener.PlayerJoin;
 import listener.PlayerKill;
@@ -16,16 +19,19 @@ import listener.PlayerPvPEvent;
 
 public class DisguisePlugin extends JavaPlugin {
 	public ConfigManager config;
+	public static DisguisePlugin plugin;
 
 	public static HashMap<String, String> playerData = new HashMap<>();
 
 	@Override
 	public void onEnable() {
+
+		plugin = this;
 		config = new ConfigManager(this, "config.yml");
-
-		System.out.println(config.getConfig().getKeys(true));
 		configValues();
-
+		
+		CustomItem.createPlayerHead("AlbiDX");
+		
 		for (String i : config.getConfig().getKeys(true)) {
 			if (i.contains("users.")) {
 				playerData.put(i.substring(6), null);
@@ -48,32 +54,29 @@ public class DisguisePlugin extends JavaPlugin {
 		Bukkit.getPluginManager().registerEvents(new PlayerJoin(), this);
 		Bukkit.getPluginManager().registerEvents(new PlayerKill(this), this);
 		Bukkit.getPluginManager().registerEvents(new PlayerPvPEvent(this), this);
+		Bukkit.getPluginManager().registerEvents(new PlayerInteract(), this);
 
 		// Commands
-		Bukkit.getPluginCommand("disguise").setExecutor(new DisguiseCommand(this));
-		Bukkit.getPluginCommand("unmask").setExecutor(new UnmaskCommand());
+		Bukkit.getPluginCommand("scydisguise").setExecutor(new DisguiseCommand(this));
+		Bukkit.getPluginCommand("scyunmask").setExecutor(new UnmaskCommand());
 
 	}
 
 	@Override
-	public void onDisable() {		
+	public void onDisable() {
 		Bukkit.getConsoleSender()
 				.sendMessage(ChatColor.translateAlternateColorCodes('&', "&4&lDisguise Plugin Disabled"));
-		
-		
-		
+
 		config.getConfig().set("users", null);
-		
+
 		for (String key : playerData.keySet()) {
 
 			config.getConfig().set("users." + key, playerData.get(key));
 
 		}
-		
+
 		config.saveConfig();
-		
-			
-		
+
 	}
 
 	public void configValues() {
@@ -87,6 +90,11 @@ public class DisguisePlugin extends JavaPlugin {
 
 	public static void addPlayer(String player, String disguise) {
 		playerData.put(player, disguise);
+
+	}
+
+	public static DisguisePlugin getPlugin() {
+		return plugin;
 
 	}
 

@@ -4,9 +4,10 @@ description: Disguise Plugin
 name: DiguisePlugin
 version: 0.1
 depend: [ProtocolLib, SkinsRestorer, TagAPI]
+api-version: 1.13
 commands:
-   disguise:
+   scydisguise:
       usage: /<command>
       permissions: disguise
-   unmask:
+   scyunmask:
       usage: /<command>

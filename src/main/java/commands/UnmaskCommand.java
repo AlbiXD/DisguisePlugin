@@ -16,8 +16,6 @@ public class UnmaskCommand implements CommandExecutor {
 
 	private SkinsRestorerAPI api = SkinsRestorerAPI.getApi();
 
-
-
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if (!(sender instanceof Player)) {
 			sender.sendMessage("You cannot use this command");
@@ -28,7 +26,6 @@ public class UnmaskCommand implements CommandExecutor {
 		/*
 		 * Self Disguise command this is meant to be a command for players to undisguise
 		 */
-		if (args.length == 0) {
 			Player player = (Player) sender;
 
 			// Check if they have a mask
@@ -45,7 +42,6 @@ public class UnmaskCommand implements CommandExecutor {
 				TagAPI.removeTag(player);
 				DisguisePlugin.playerData.remove(sender.getName());
 
-
 			} catch (SkinRequestException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -55,35 +51,5 @@ public class UnmaskCommand implements CommandExecutor {
 			return true;
 		}
 
-		/*
-		 * This is meant to be used by admins to undsiguise certain players for
-		 * debugging reasons
-		 */
-		if (args.length == 1 && sender.hasPermission("unmask.others")) {
-			if (!DisguisePlugin.playerData.containsKey(sender.getName())) {
-				sender.sendMessage(
-						ChatColor.translateAlternateColorCodes('&', "&c" + args[0] + " is currently not masked!"));
-
-				return true;
-			}
-
-			try {
-				api.removeSkin(args[0]);
-				api.applySkin(new PlayerWrapper(Bukkit.getPlayer(args[0])));
-				DisguisePlugin.playerData.remove(sender.getName());
-			} catch (SkinRequestException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&a" + args[0] + " successfully unmasked!"));
-			Bukkit.getPlayer(args[0])
-					.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cYou have been unmasked!"));
-
-		}
-
-		return true;
-
-	}
 
 }

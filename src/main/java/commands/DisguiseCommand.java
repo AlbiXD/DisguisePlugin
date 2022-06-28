@@ -17,9 +17,11 @@ public class DisguiseCommand extends BaseCommand implements CommandExecutor, Tab
 
 	public DisguiseCommand(DisguisePlugin plugin) {
 
-		super.addSubCommand(new DisguisePlayerHead());
+		super.addSubCommand(new DisguiseGive());
 		super.addSubCommand(new DisguiseConfigReload(plugin));
 		super.addSubCommand(new DisguiseHelpCommand());
+		super.addSubCommand(new DisguiseClear());
+		super.addSubCommand(new DisguiseSet());
 
 	}
 
@@ -28,11 +30,12 @@ public class DisguiseCommand extends BaseCommand implements CommandExecutor, Tab
 		 * Checks if the command arguments is less than 0
 		 */
 
-		if (!sender.hasPermission("disguise")) {
+		if (!sender.hasPermission("scydisguise")) {
 			sender.sendMessage(
 					ChatColor.translateAlternateColorCodes('&', "&cYou do not have permission to run this command!"));
 			return true;
 		}
+		
 
 		if (args.length > 0) {
 			for (SubCommand sub : super.getSubCommands()) {
@@ -53,7 +56,8 @@ public class DisguiseCommand extends BaseCommand implements CommandExecutor, Tab
 		 * Checks if the command arguments is less than 0
 		 */
 		if (args.length == 0) {
-			sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cInvalid Usage!"));
+			
+			super.getSubCommands().get(2).execute(sender, args);
 			return true;
 		}
 
@@ -67,6 +71,8 @@ public class DisguiseCommand extends BaseCommand implements CommandExecutor, Tab
 			commands.add("give");
 			commands.add("reload");
 			commands.add("help");
+			commands.add("set");
+			commands.add("clear");
 			return commands;
 
 		}

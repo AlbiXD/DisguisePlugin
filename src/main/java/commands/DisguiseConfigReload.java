@@ -14,7 +14,7 @@ public class DisguiseConfigReload extends SubCommand {
 	private DisguisePlugin plugin;
 
 	public DisguiseConfigReload(DisguisePlugin plugin) {
-		super("disguise", "reload", new ArrayList<String>(), "disguise.reload", "/disguise reload",
+		super("scydisguise", "reload", new ArrayList<String>(), "scydisguise.reload", "/disguise reload",
 				"reloads the configuration");
 		// TODO Auto-generated constructor stub
 		this.plugin = plugin;
